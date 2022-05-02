@@ -38,7 +38,7 @@ mapping common_list = ([
 　　　　　　　　　　　　　　　　　 "kris"　 : "蛇刃剑", "blade" : "刀",
 　　　　　　　　　　　　　　　　　 "throwing knife" : "投掷刀", "balanced knife" : "平衡刀", ]),
 
-                        "axe"　 : ([ "hand exe"　 : "手斧",　 "axe"　　　　　 : "斧", 
+                        "axe"　 : ([ "hand exe"　 : "手斧",　 "axe"　　　　　 : "斧",
 　　　　　　　　　　　　　　　　　 "double exe" : "双刃斧", "military pick" : "战镐",
 　　　　　　　　　　　　　　　　　 "war axe"　　: "战斧",　 "large axe"　　 : "大斧",
 　　　　　　　　　　　　　　　　　 "broad axe"　: "宽斧",　 "battle axe"　　: "战斧",
@@ -61,7 +61,7 @@ mapping common_list = ([
 　　　　　　　　　　　　　　　　　　 "brandistock" : "长矛", "spetum"　: "长矛",
 　　　　　　　　　　　　　　　　　　 "pike"　　　　: "长枪", ]), ]),
 
-        "helmet" : ([ "cap"　　　 : "帽子",　 "skull cap"　: "头盔", "helm"　: "头盔", 
+        "helmet" : ([ "cap"　　　 : "帽子",　 "skull cap"　: "头盔", "helm"　: "头盔",
 　　　　　　　        "full helm" : "全头盔", "great helm" : "巨盔", "crown" : "冠",
 　　　　　　　　　　  "mask"　　　: "面具",　 "bone helm"　: "骨盔", ]),
 
@@ -119,6 +119,6 @@ array common_rate_table = ({ "weapon", "potion", "armor", "helmet", "shield",
 　　　　　　　　　　　　　　　 "key", "gloves", "boots", "belt", "ring", "amulet",
 　　　　　　　　　　　　　　　 "charm", "jewel", });
 
-static int max_rate;
+nosave int max_rate;
 
 int *common_rate_list = ({ 120, 100, 100, 80, 80, 70, 60, 60, 60, 20, 20, 20, 10, });

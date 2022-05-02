@@ -21,8 +21,8 @@ inherit F_SAVE;
 #define LOG(lv, msg)    log_file(sprintf("transfer/LV%d", lv), msg);
 
 // 奇怪的是 'nosave' 关键字不许用？
-static string suffix = "abcdefghijklmnopqrstuvwxyz";
-static string save_dir = SAVE_DIR;
+nosave string suffix = "abcdefghijklmnopqrstuvwxyz";
+nosave string save_dir = SAVE_DIR;
 
 mapping save_dbase;
 
@@ -125,12 +125,12 @@ mapping assure_user_file(string user, int flag)
 
         for (times = 0; times < SUFFIX_SIZE; times++)
         {
-                file["login_to"] = sprintf("%slogin/%c/%s%c.o", 
-                                           DATA_DIR, user[0], 
+                file["login_to"] = sprintf("%slogin/%c/%s%c.o",
+                                           DATA_DIR, user[0],
                                            user, suffix[times]);
 
-                file["user_to"] = sprintf("%suser/%c/%s%c.o", 
-                                          DATA_DIR, user[0], 
+                file["user_to"] = sprintf("%suser/%c/%s%c.o",
+                                          DATA_DIR, user[0],
                                           user, suffix[times]);
 
                 file["uid"] = sprintf("%s%c", user, suffix[times]);
@@ -142,12 +142,12 @@ mapping assure_user_file(string user, int flag)
 #else
         mapping file = ([ ]);
 
-        file["login_to"] = sprintf("%slogin/%c/%s%s.o", 
-                                   DATA_DIR, user[0], 
+        file["login_to"] = sprintf("%slogin/%c/%s%s.o",
+                                   DATA_DIR, user[0],
                                    user, "_" + SUFFIX_NAME);
 
-        file["user_to"] = sprintf("%suser/%c/%s%s.o", 
-                                  DATA_DIR, user[0], 
+        file["user_to"] = sprintf("%suser/%c/%s%s.o",
+                                  DATA_DIR, user[0],
                                   user, "_" + SUFFIX_NAME);
 
         file["uid"] = sprintf("%s%s", user, "_" + SUFFIX_NAME);
@@ -172,7 +172,7 @@ string *get_user_list(string dir)
         dir += "login/";
 
         sub_dir_list = get_dir(dir);
-        sub_dir_list = filter_array(sub_dir_list, 
+        sub_dir_list = filter_array(sub_dir_list,
                                     (: file_size($(dir) + $1) == -2 :));
         sub_dir_list = map_array(sub_dir_list, (: $(dir) + $1 + "/" :));
 
@@ -231,7 +231,7 @@ object global_find_player(string user)
                 ob->set_temp("temp_loaded", 1);
                 ob->set_temp("link_ob", login_ob);
 
-                ob->start_call_out(bind((: call_other, __FILE__, 
+                ob->start_call_out(bind((: call_other, __FILE__,
                                    "global_destruct_player", ob, 0 :),
                                    ob), 0);
 
@@ -255,7 +255,7 @@ void global_destruct_player(object ob, int raw)
                         if (raw) login_ob->save();
                         destruct(login_ob);
                 }
-                
+
                 if (raw) ob->save();
                 destruct(ob);
         }
@@ -279,9 +279,9 @@ void transfer_autoload(object user, string card_file)
         if (! arrayp(autoload) || ! sizeof(autoload))
                 return;
 
-        autoload = filter_array(autoload, 
+        autoload = filter_array(autoload,
                                 (: (! sscanf($1, "/data/%*s")) :));
-                                
+
         if (stringp(card_file))
                 autoload += ({ card_file });
 
@@ -341,7 +341,7 @@ int do_merge(string arg)
                         ob->restore();
         }
 
-        return 1;        
+        return 1;
 }
 
 int do_batch()
@@ -353,7 +353,7 @@ int do_batch()
         user_list = get_user_list(save_dir);
 
         write(WHT "开始迁移用户数据...\n\n" NOR);
-        
+
         i = 0;
         foreach (user in user_list)
         {
@@ -371,8 +371,8 @@ int do_batch()
                 }
                 else write(sprintf("%-15s: " WHT "Failed" NOR "\n", user));
         }
-        
-        write(WHT "\n迁移用户数据完成，共 " + sizeof(user_list) + 
+
+        write(WHT "\n迁移用户数据完成，共 " + sizeof(user_list) +
               " 名用户，成功迁移 " + i + " 名用户。\n" NOR);
         return 1;
 }
@@ -414,7 +414,7 @@ int transfer_user(string arg)
 
         if (file_size(login_from) <= 0 || file_size(user_from) <= 0)
         {
-                LOG(1, "File not found: (" + login_from + " & " + 
+                LOG(1, "File not found: (" + login_from + " & " +
                         user_from + ").\n");
                 return 0;
         }
@@ -424,14 +424,14 @@ int transfer_user(string arg)
         file = assure_user_file(arg, 0);
         if (! file)
         {
-                LOG(1, "User conflict: (" + login_from + " & " + 
+                LOG(1, "User conflict: (" + login_from + " & " +
                         user_from + ").\n");
                 return 0;
         }
 
         if (! cp(login_from, file["login_to"]) || ! cp(user_from, file["user_to"]))
         {
-                LOG(1, "Copy file to: (" + file["login_to"] + " | " + 
+                LOG(1, "Copy file to: (" + file["login_to"] + " | " +
                        file["user_to"] + ") failed.\n");
                 return 0;
         }
@@ -449,9 +449,9 @@ int transfer_user(string arg)
                 // 修改 LOGIN_OB 和 USER_OB 的 ID
                 if (objectp(link = user->query_temp("link_ob")))
                         link->set("id", uid);
-        
+
                 user->set("id", uid);
-                LOG(2, "User ID (" + arg + ") changed into: (" + 
+                LOG(2, "User ID (" + arg + ") changed into: (" +
                         uid + ").\n");
         }
 
@@ -506,7 +506,7 @@ int transfer_user(string arg)
         // 糊涂了，因此，对于已经转移过的，要修改源
         // 目录内的文件名。
         couple_id = user->query("couple/id");
-        
+
         if (stringp(couple_id))
         {
                 // 改变配偶名字
@@ -515,9 +515,9 @@ int transfer_user(string arg)
 
                 user->set("couple/id", couple_id);
 
-                LOG(3, "User (" + arg + ")'s couple/id set to " + 
+                LOG(3, "User (" + arg + ")'s couple/id set to " +
                        couple_id + ".\n");
-                
+
                 // 嗯，要自己保管好自己的结婚戒指
                 if (user->query("can_summon/wedding ring"))
                 {
@@ -526,10 +526,10 @@ int transfer_user(string arg)
                         cp(sprintf("%sitem/ring/%s.c", save_dir, arg),
                            ring_file);
 
-                        user->set("can_summon/wedding ring", 
+                        user->set("can_summon/wedding ring",
                                   sprintf("%sitem/ring/%s.c", DATA_DIR, uid));
 
-                        LOG(3, "User (" + arg + ")'s wedding ring copied to " + 
+                        LOG(3, "User (" + arg + ")'s wedding ring copied to " +
                                ring_file + ".\n");
                 }
 
@@ -541,11 +541,11 @@ int transfer_user(string arg)
                 if (item_data)
                 {
                         item_data["user"] = sprintf("%s(%s)", user->name(), uid);
-                        is_ok = DBASE_D->set_object_data(sprintf("%sitem/ring/%s", 
+                        is_ok = DBASE_D->set_object_data(sprintf("%sitem/ring/%s",
                                                          DATA_DIR, uid), item_data);
 
-                        LOG((is_ok ? 3 : 1), "Wedding ring data of (" + arg + 
-                                             ") port to DBASE_D " + 
+                        LOG((is_ok ? 3 : 1), "Wedding ring data of (" + arg +
+                                             ") port to DBASE_D " +
                                              (is_ok ? "succeed" : "failed") + ".\n");
                 }
         }
@@ -569,12 +569,12 @@ int transfer_user(string arg)
                         item_file = sprintf("%sitem/%c/%s-%s.c", DATA_DIR, uid[0], uid,
                                             item_name);
                         // 复制文件
-                        is_ok = cp(sprintf("%sitem/%c/%s-%s.c", save_dir, arg[0], arg, item_name), 
+                        is_ok = cp(sprintf("%sitem/%c/%s-%s.c", save_dir, arg[0], arg, item_name),
                                    item_file);
 
                         if (! is_ok)
                         {
-                                LOG(1, "Failed copy Item " + item_name + " of (" + arg + 
+                                LOG(1, "Failed copy Item " + item_name + " of (" + arg +
                                        ").\n");
                         } else
                         {
@@ -584,19 +584,19 @@ int transfer_user(string arg)
                                 {
                                         file_content = read_file(item_file);
                                         file_content = replace_string(file_content, arg, uid);
-        
+
                                         write_file(item_file, file_content, 1);
                                 }
-        
+
                                 if (item_data)
                                 {
                                         // 修改 "user" 属性以适应新的 ID
                                         item_data["user"] = sprintf("%s(%s)", user->name(), uid);
-        
+
                                         // 将原来的物品存盘信息导入 DBASE_D
                                         is_ok = DBASE_D->set_object_data(item_file, item_data);
                                 }
-        
+
                                 // 更新用户身上的物品列表
                                 user->set("can_summon/" + item_name, item_file);
 

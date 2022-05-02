@@ -37,12 +37,12 @@ private int house_picture_xian();                       //显示图样
 private void reset_all_static();                        //变量清零
 private int add_vip_count(string arg);                  //贵宾扩限
 
-static int the_value = 0;
-static int max_laodu = 0;
-static string the_name = "";
-static string the_type = "";
-static string the_base = "";
-static mapping npc_data = ([]);
+nosave int the_value = 0;
+nosave int max_laodu = 0;
+nosave string the_name = "";
+nosave string the_type = "";
+nosave string the_base = "";
+nosave mapping npc_data = ([]);
 
 void create()
 {
